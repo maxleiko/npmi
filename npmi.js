@@ -16,6 +16,7 @@ var npmi = function (options, callback) {
         version      = options.version || 'latest',
         path         = options.path || '.',
         forceInstall = options.forceInstall || false,
+        localInstall = options.localInstall || false,
         npmLoad      = options.npmLoad || {loglevel: 'silent'};
 
     function viewCallback(installedVersion)  {
@@ -74,13 +75,18 @@ var npmi = function (options, callback) {
         }
 
         // npm loaded successfully
-        if (forceInstall) {
+        if (localInstall) {
+            // local install won't work with version specified
+            npm.commands.install(path, [name], installCallback);
+        } else {
+            if (forceInstall) {
             // reinstall package module
             npm.commands.install(path, [name+'@'+version], installCallback);
 
-        } else {
-            // check if package is installed and 
-            npm.commands.list([name], true, listCallback);
+            } else {
+                // check if package is installed and 
+                npm.commands.list([name], true, listCallback);
+            }
         }
     }
 
