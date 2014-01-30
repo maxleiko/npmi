@@ -6,7 +6,8 @@ var options = {
 	name: 'kevoree-group-websocket',
 	version: '0.0.4',
 	path: '.',
-	forceInstall: false
+	forceInstall: false,
+    localInstall: false
 };
 npmi(options, function (err, result) {
 	if (err) {

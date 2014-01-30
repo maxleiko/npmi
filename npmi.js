@@ -1,8 +1,9 @@
-var npm = require('npm');
+var npm  = require('npm');
+var fs   = require('fs');
+var path = require('path'); 
 
 var LOAD_ERR    = 'NPM_LOAD_ERR',
     INSTALL_ERR = 'NPM_INSTALL_ERR',
-    LIST_ERR    = 'NPM_LIST_ERR',
     VIEW_ERR    = 'NPM_VIEW_ERR';
 
 /**
@@ -14,7 +15,7 @@ var LOAD_ERR    = 'NPM_LOAD_ERR',
 var npmi = function (options, callback) {
     var name         = options.name,
         version      = options.version || 'latest',
-        path         = options.path || '.',
+        installPath  = options.path || '.',
         forceInstall = options.forceInstall || false,
         localInstall = options.localInstall || false,
         npmLoad      = options.npmLoad || {loglevel: 'silent'};
@@ -33,29 +34,35 @@ var npmi = function (options, callback) {
                 break;
             }
             if (installedVersion === latestVersion) return callback(null);
-            else npm.commands.install(path, [name+'@'+latestVersion], installCallback);
+            else npm.commands.install(installPath, [name+'@'+latestVersion], installCallback);
         }
     }
 
-    function listCallback(err, list) {
-        if (err) {
-            err.code = LIST_ERR;
-            return callback(err);
-        }
-
-        // npm list success
-        if (list.dependencies[name]) {
-            if (version === 'latest') {
-                return npm.commands.view([name], true, viewCallback(list.dependencies[name].version));
-            } else {
-                if (list.dependencies[name].version === version) {
-                    return callback(null);
-                }
+    function checkInstalled() {
+        // check that version matches
+        fs.readFile(path.resolve(installPath, 'node_modules', name, 'package.json'), function (err, pkgRawData) {
+            if (err) {
+                // hmm, something went wrong while reading module's package.json file
+                // lets try to reinstall it just in case
+                return npm.commands.install(installPath, [name+'@'+version], installCallback);
             }
-        }
-        // if we end-up here, it means that whether the package is not installed
-        // or it is installed but with the wrong version: reinstall
-        npm.commands.install(path, [name+'@'+version], installCallback);
+
+            var pkg = JSON.parse(pkgRawData);
+            if (version === 'latest') {
+                // specified version is "latest" which means nothing for a check
+                // so we need to ask npm to give us a view of the module from remote registry
+                // in order to check if it really is the latest one that is currently installed
+                return npm.commands.view([name], true, viewCallback(pkg.version));
+
+            } else if (pkg.version === version) {
+                // package is installed and version matches
+                return callback(null);
+
+            } else {
+                // version does not match: reinstall
+                return npm.commands.install(installPath, [name+'@'+version], installCallback);
+            }
+        });
     }
 
     function installCallback(err, result) {
@@ -77,15 +84,15 @@ var npmi = function (options, callback) {
         // npm loaded successfully
         if (localInstall) {
             // local install won't work with version specified
-            npm.commands.install(path, [name], installCallback);
+            npm.commands.install(installPath, [name], installCallback);
         } else {
             if (forceInstall) {
-            // reinstall package module
-            npm.commands.install(path, [name+'@'+version], installCallback);
+                // reinstall package module
+                npm.commands.install(installPath, [name+'@'+version], installCallback);
 
             } else {
-                // check if package is installed and 
-                npm.commands.list([name], true, listCallback);
+                // check if package is installed
+                checkInstalled();
             }
         }
     }
@@ -95,7 +102,6 @@ var npmi = function (options, callback) {
 
 npmi.LOAD_ERR    = LOAD_ERR;
 npmi.INSTALL_ERR = INSTALL_ERR;
-npmi.LIST_ERR    = LIST_ERR;
 npmi.VIEW_ERR    = VIEW_ERR;
 
 module.exports = npmi;
