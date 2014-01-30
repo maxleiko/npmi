@@ -1,0 +1,28 @@
+{
+  "name": "npmi",
+  "version": "0.0.1",
+  "description": "Gives a simplier API to npm install (programatically installs stuffs)",
+  "main": "npmi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/maxleiko/npmi.git"
+  },
+  "keywords": [
+    "npm",
+    "install",
+    "api",
+    "programatically"
+  ],
+  "author": "Maxime Tricoire <max.tricoire@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maxleiko/npmi/issues"
+  },
+  "homepage": "https://github.com/maxleiko/npmi",
+  "dependencies": {
+    "npm": "~1.3.25"
+  }
+}
