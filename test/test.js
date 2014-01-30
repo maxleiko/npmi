@@ -1,4 +1,4 @@
-var npmInstaller = require('./../npm-installer');
+var npmi = require('./../npmi');
 var path = require('path');
 
 
@@ -8,10 +8,10 @@ var options = {
 	path: '.',
 	forceInstall: false
 };
-npmInstaller(options, function (err, result) {
+npmi(options, function (err, result) {
 	if (err) {
-		if 		(err.code === npmInstaller.LOAD_ERR) 	console.log('npm load error');
-		else if (err.code === npmInstaller.INSTALL_ERR) console.log('npm install error');
+		if 		(err.code === npmi.LOAD_ERR) 	console.log('npm load error');
+		else if (err.code === npmi.INSTALL_ERR) console.log('npm install error');
 		return console.log(err.message);
 	}
 

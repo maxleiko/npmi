@@ -11,7 +11,7 @@ var LOAD_ERR    = 'NPM_LOAD_ERR',
  * Date: 30/01/14
  * Time: 10:28
  */
-var npmInstaller = function (options, callback) {
+var npmi = function (options, callback) {
     var name         = options.name,
         version      = options.version || 'latest',
         path         = options.path || '.',
@@ -87,9 +87,9 @@ var npmInstaller = function (options, callback) {
     npm.load(npmLoad, loadCallback);
 }
 
-npmInstaller.LOAD_ERR    = LOAD_ERR;
-npmInstaller.INSTALL_ERR = INSTALL_ERR;
-npmInstaller.LIST_ERR    = LIST_ERR;
-npmInstaller.VIEW_ERR    = VIEW_ERR;
+npmi.LOAD_ERR    = LOAD_ERR;
+npmi.INSTALL_ERR = INSTALL_ERR;
+npmi.LIST_ERR    = LIST_ERR;
+npmi.VIEW_ERR    = VIEW_ERR;
 
-module.exports = npmInstaller;
+module.exports = npmi;
