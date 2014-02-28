@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/maxleiko/npmi",
   "dependencies": {
-    "npm": "1.4.3"
+    "npm": "1.4.4"
   }
 }
