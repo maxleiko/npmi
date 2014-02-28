@@ -3,19 +3,11 @@ var path = require('path');
 
 
 var options = {
-	name: 'kevoree-group-websocket',
-	version: '0.0.4',
-	path: '.',
-	forceInstall: false,
-    localInstall: false
+	name: 'kevoree-group-websocket'
 };
-npmi(options, function (err, result) {
-	if (err) {
-		if 		(err.code === npmi.LOAD_ERR) 	console.log('npm load error');
-		else if (err.code === npmi.INSTALL_ERR) console.log('npm install error');
-		return console.log(err.message);
-	}
+npmi(options, function (err) {
+	if (err) throw err;
 
 	// installed
-	console.log(options.name+'@'+options.version+' installed successfully in '+path.resolve(options.path));
+	console.log(options.name+' installed successfully');
 });
