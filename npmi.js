@@ -13,6 +13,8 @@ var LOAD_ERR    = 'NPM_LOAD_ERR',
  * Time: 10:28
  */
 var npmi = function (options, callback) {
+    callback = callback || function () {};
+
     var name         = options.name,
         version      = options.version || 'latest',
         installPath  = options.path || '.',
@@ -71,7 +73,7 @@ var npmi = function (options, callback) {
             return callback(err);
         }
 
-        // npm installed name@version in path successfully
+        // npm installed dependencies from package.json in path successfully
         return callback(null, result);
     }
 
@@ -82,7 +84,11 @@ var npmi = function (options, callback) {
         }
 
         // npm loaded successfully
-        if (localInstall) {
+        if (!name) {
+            // just want to do an "npm install" where a package.json is obviously
+            npm.commands.install(installPath, [], installCallback);
+
+        } else if (localInstall) {
             // local install won't work with version specified
             npm.commands.install(installPath, [name], installCallback);
         } else {
