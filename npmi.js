@@ -30,13 +30,12 @@ var npmi = function (options, callback) {
             }
 
             // npm view success
-            var latestVersion;
-            for (var i in view) {
-                latestVersion = i;
-                break;
+            var latestVersion = Object.keys(view)[0];
+            if ((typeof latestVersion !== 'undefined') && (latestVersion === installedVersion)) {
+                return callback();
+            } else {
+                npm.commands.install(installPath, [name+'@'+latestVersion], installCallback);
             }
-            if (installedVersion === latestVersion) return callback(null);
-            else npm.commands.install(installPath, [name+'@'+latestVersion], installCallback);
         }
     }
 
