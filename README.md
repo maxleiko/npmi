@@ -10,7 +10,7 @@ npm install npmi
 
 ### Usage
 ```js
-var npmi = require('./../npmi');
+var npmi = require('npmi');
 var path = require('path');
 
 
