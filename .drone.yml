@@ -2,8 +2,6 @@ image: bradrydzewski/ubuntu
 script:
   - npm i
   - npm test
-cache:
-  - .npm
 notify:
   email:
     recipients:
