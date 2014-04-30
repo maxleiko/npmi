@@ -1,4 +1,4 @@
-image: bradrydzewski/ubuntu
+image: bradrydzewski/base
 script:
   - npm i
   - npm test
