@@ -1,4 +1,4 @@
-image: bradrydzewski/node
+image: bradrydzewski/node:0.10
 script:
   - npm i
   - npm test
