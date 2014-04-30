@@ -1,4 +1,4 @@
-image: braindead/node
+image: bradrydzewski/node
 script:
   - npm i
   - npm test
