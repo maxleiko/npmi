@@ -5,7 +5,7 @@ NodeJS package that gives a simplier API to npm install (programatically install
 
 ### Installation
 ```sh
-npm install npmi
+npm install npmi --save
 ```
 
 ### Options
