@@ -16,6 +16,7 @@ var npmi = function (options, callback) {
     callback = callback || function () {};
 
     var name         = options.name,
+        pkgName      = options.pkgName || name,
         version      = options.version || 'latest',
         installPath  = options.path || '.',
         forceInstall = options.forceInstall || false,
@@ -39,29 +40,45 @@ var npmi = function (options, callback) {
         }
     }
 
-    function checkInstalled() {
+    function checkInstalled(isTarball) {
+        var module = name+'@'+version;
+
+        if (isTarball) {
+            module = name;
+            if (pkgName === name) {
+                console.warn('npmi warn: install "'+name+'" from tarball without options.pkgName specified => forceInstall: true');
+            }
+        }
+
         // check that version matches
-        fs.readFile(path.resolve(installPath, 'node_modules', name, 'package.json'), function (err, pkgRawData) {
+        fs.readFile(path.resolve(installPath, 'node_modules', pkgName, 'package.json'), function (err, pkgRawData) {
             if (err) {
                 // hmm, something went wrong while reading module's package.json file
                 // lets try to reinstall it just in case
-                return npm.commands.install(installPath, [name+'@'+version], installCallback);
+                return npm.commands.install(installPath, [module], installCallback);
             }
 
             var pkg = JSON.parse(pkgRawData);
             if (version === 'latest') {
-                // specified version is "latest" which means nothing for a check
-                // so we need to ask npm to give us a view of the module from remote registry
-                // in order to check if it really is the latest one that is currently installed
-                return npm.commands.view([name], true, viewCallback(pkg.version));
+                // specified version is "latest" which means nothing for a comparison check
+                if (isTarball) {
+                    // when a package is already installed and it comes from a tarball, you have to specify
+                    // a real version => error
+                    console.warn('npmi warn: install from tarball without options.version specified => forceInstall: true');
+                    return npm.commands.install(installPath, [module], installCallback);
+                } else {
+                    // so we need to ask npm to give us a view of the module from remote registry
+                    // in order to check if it really is the latest one that is currently installed
+                    return npm.commands.view([name], true, viewCallback(pkg.version));
+                }
 
             } else if (pkg.version === version) {
                 // package is installed and version matches
-                return callback(null);
+                return callback();
 
             } else {
                 // version does not match: reinstall
-                return npm.commands.install(installPath, [name+'@'+version], installCallback);
+                return npm.commands.install(installPath, [module], installCallback);
             }
         });
     }
@@ -84,7 +101,7 @@ var npmi = function (options, callback) {
 
         // npm loaded successfully
         if (!name) {
-            // just want to do an "npm install" where a package.json is obviously
+            // just want to do an "npm install" where a package.json is
             npm.commands.install(installPath, [], installCallback);
 
         } else if (localInstall) {
@@ -93,17 +110,23 @@ var npmi = function (options, callback) {
         } else {
             if (forceInstall) {
                 // reinstall package module
-                npm.commands.install(installPath, [name+'@'+version], installCallback);
+                if (name.indexOf('/') === -1) {
+                    // not a tarball
+                    npm.commands.install(installPath, [name+'@'+version], installCallback);
+                } else {
+                    // do not specify version for tarball
+                    npm.commands.install(installPath, [name], installCallback);
+                }
 
             } else {
                 // check if package is installed
-                checkInstalled();
+                checkInstalled(name.indexOf('/') !== -1);
             }
         }
     }
 
     npm.load(npmLoad, loadCallback);
-}
+};
 
 npmi.LOAD_ERR    = LOAD_ERR;
 npmi.INSTALL_ERR = INSTALL_ERR;

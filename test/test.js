@@ -1,6 +1,4 @@
 var npmi = require('./../npmi');
-var path = require('path');
-
 
 var options = {
 	name: 'kevoree-group-websocket'
