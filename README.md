@@ -1,11 +1,11 @@
-npmi
+npmi [![Build Status](http://drone.braindead.fr/github.com/maxleiko/npmi/status.svg?branch=master)](http://drone.braindead.fr/github.com/maxleiko/npmi)
 ====
 
 NodeJS package that gives a simplier API to npm install (programatically installs things)
 
 ### Installation
 ```sh
-npm install npmi
+npm install npmi --save
 ```
 
 ### Options
