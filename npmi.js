@@ -63,7 +63,7 @@ var npmi = function (options, callback) {
                 // specified version is "latest" which means nothing for a comparison check
                 if (isTarball) {
                     // when a package is already installed and it comes from a tarball, you have to specify
-                    // a real version => error
+                    // a real version => warn
                     console.warn('npmi warn: install from tarball without options.version specified => forceInstall: true');
                     return npm.commands.install(installPath, [module], installCallback);
                 } else {
