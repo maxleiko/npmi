@@ -1,6 +1,7 @@
-var npm  = require('npm');
-var fs   = require('fs');
-var path = require('path'); 
+var npm    = require('npm');
+var fs     = require('fs');
+var path   = require('path');
+var semver = require('semver');
 
 var LOAD_ERR    = 'NPM_LOAD_ERR',
     INSTALL_ERR = 'NPM_INSTALL_ERR',
@@ -46,7 +47,7 @@ var npmi = function (options, callback) {
         if (isTarball) {
             module = name;
             if (pkgName === name) {
-                console.warn('npmi warn: install "'+name+'" from tarball without options.pkgName specified => forceInstall: true');
+                console.warn('npmi warn: install "'+name+'" from tarball/folder without options.pkgName specified => forceInstall: true');
             }
         }
 
@@ -105,8 +106,37 @@ var npmi = function (options, callback) {
             npm.commands.install(installPath, [], installCallback);
 
         } else if (localInstall) {
-            // local install won't work with version specified
-            npm.commands.install(installPath, [name], installCallback);
+            if (forceInstall) {
+                // local install won't work with version specified
+                npm.commands.install(installPath, [name], installCallback);
+            } else {
+                // check if there is already a local install of this module
+                // TODO there is no check made on module integrity => do a shasum integrity check
+                fs.readFile(path.resolve(installPath, 'node_modules', path.basename(name), 'package.json'), function (err, targetPkgData) {
+                    if (err) {
+                        // file probably doesn't exist, or is corrupted: install
+                        // local install won't work with version specified
+                        npm.commands.install(installPath, [name], installCallback);
+                    } else {
+                        // there is a module that looks a lot like the one you want to install: do some checks
+                        fs.readFile(path.resolve(name, 'package.json'), function (err, sourcePkgData) {
+                            if (err) {
+                                callback(err);
+                                return;
+                            }
+
+                            var sourcePkg = JSON.parse(sourcePkgData),
+                                targetPkg = JSON.parse(targetPkgData);
+
+                            if (semver.gt(sourcePkg.version, targetPkg.version)) {
+                                // install because current found version seems outdated
+                                // local install won't work with version specified
+                                npm.commands.install(installPath, [name], installCallback);
+                            }
+                        });
+                    }
+                });
+            }
         } else {
             if (forceInstall) {
                 // reinstall package module

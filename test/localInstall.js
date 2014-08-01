@@ -1,10 +1,14 @@
 var npmi = require('../npmi');
+var os = require('os');
+var path = require('path');
 
 npmi({
-	name: '/tmp/potato',
-	version: '0.0.1',
-	path: '/tmp/potato',
-	forceInstall: true
+	name: path.resolve(__dirname, 'submodule'),
+	path: path.resolve(os.tmpdir(), 'npmi_test_install'),
+	localInstall: true
 }, function (err) {
-	if (err) throw err;
+	if (err) {
+        console.log('Test failed');
+        throw err;
+    }
 });
