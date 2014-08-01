@@ -132,6 +132,8 @@ var npmi = function (options, callback) {
                                 // install because current found version seems outdated
                                 // local install won't work with version specified
                                 npm.commands.install(installPath, [name], installCallback);
+                            } else {
+                                callback();
                             }
                         });
                     }
