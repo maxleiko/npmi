@@ -1,6 +1,6 @@
 {
   "name": "npmi",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Gives a simplier API to npm install (programatically installs stuffs)",
   "main": "npmi.js",
   "scripts": {
