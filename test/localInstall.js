@@ -1,11 +1,13 @@
 var npmi = require('../npmi');
-var os = require('os');
 var path = require('path');
 
+var pathToModule = path.resolve(__dirname, 'submodule');
+
 npmi({
-	name: path.resolve(__dirname, 'submodule'),
-	path: path.resolve(os.tmpdir(), 'npmi_test_install'),
-	localInstall: true
+	name: pathToModule,
+	path: path.resolve(pathToModule, '.deploy_units'),
+	localInstall: true,
+    npmLoad: { loglevel: 'verbose' }
 }, function (err) {
 	if (err) {
         console.log('Test failed');

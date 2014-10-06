@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/maxleiko/npmi",
   "dependencies": {
-    "npm": "^1.4.16",
+    "npm": "^2.1.2",
     "semver": "^3.0.1"
   }
 }
