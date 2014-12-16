@@ -111,29 +111,39 @@ var npmi = function (options, callback) {
                 npm.commands.install(installPath, [name], installCallback);
             } else {
                 // check if there is already a local install of this module
-                // TODO there is no check made on module integrity => do a shasum integrity check
-                fs.readFile(path.resolve(installPath, 'node_modules', path.basename(name), 'package.json'), function (err, targetPkgData) {
+                fs.readFile(path.resolve(name, 'package.json'), 'utf8', function (err, sourcePkgData) {
                     if (err) {
-                        // file probably doesn't exist, or is corrupted: install
-                        // local install won't work with version specified
-                        npm.commands.install(installPath, [name], installCallback);
+                        callback(err);
+
                     } else {
-                        // there is a module that looks a lot like the one you want to install: do some checks
-                        fs.readFile(path.resolve(name, 'package.json'), function (err, sourcePkgData) {
+                        try {
+                            var sourcePkg = JSON.parse(sourcePkgData)
+                        } catch (err) {
+                            callback(err);
+                            return;
+                        }
+                        var pkgName = sourcePkg.name || path.basename(name);
+                        fs.readFile(path.resolve(installPath, 'node_modules', pkgName, 'package.json'), 'utf8', function (err, targetPkgData) {
                             if (err) {
-                                callback(err);
-                                return;
-                            }
-
-                            var sourcePkg = JSON.parse(sourcePkgData),
-                                targetPkg = JSON.parse(targetPkgData);
-
-                            if (semver.gt(sourcePkg.version, targetPkg.version)) {
-                                // install because current found version seems outdated
+                                // file probably doesn't exist, or is corrupted: install
                                 // local install won't work with version specified
                                 npm.commands.install(installPath, [name], installCallback);
                             } else {
-                                callback();
+                                // there is a module that looks a lot like the one you want to install: do some checks
+                                try {
+                                    var targetPkg = JSON.parse(targetPkgData);
+                                } catch (err) {
+                                    callback(err);
+                                    return;
+                                }
+
+                                if (semver.gt(sourcePkg.version, targetPkg.version)) {
+                                    // install because current found version seems outdated
+                                    // local install won't work with version specified
+                                    npm.commands.install(installPath, [name], installCallback);
+                                } else {
+                                    callback();
+                                }
                             }
                         });
                     }
