@@ -22,11 +22,14 @@ var npmi = function (options, callback) {
         installPath  = options.path || '.',
         forceInstall = options.forceInstall || false,
         localInstall = options.localInstall || false,
-        npmLoad      = options.npmLoad || {loglevel: 'silent'};
+        npmLoad      = options.npmLoad || {loglevel: 'silent'},
+        savedPrefix  = null;
 
     function viewCallback(installedVersion)  {
         return function (err, view) {
             if (err) {
+                // reset npm.prefix to saved value
+                npm.prefix = savedPrefix;
                 err.code = VIEW_ERR;
                 return callback(err);
             }
@@ -34,6 +37,8 @@ var npmi = function (options, callback) {
             // npm view success
             var latestVersion = Object.keys(view)[0];
             if ((typeof latestVersion !== 'undefined') && (latestVersion === installedVersion)) {
+                // reset npm.prefix to saved value
+                npm.prefix = savedPrefix;
                 return callback();
             } else {
                 npm.commands.install(installPath, [name+'@'+latestVersion], installCallback);
@@ -75,6 +80,8 @@ var npmi = function (options, callback) {
 
             } else if (pkg.version === version) {
                 // package is installed and version matches
+                // reset npm.prefix to saved value
+                npm.prefix = savedPrefix;
                 return callback();
 
             } else {
@@ -85,13 +92,14 @@ var npmi = function (options, callback) {
     }
 
     function installCallback(err, result) {
+        // reset npm.prefix to saved value
+        npm.prefix = savedPrefix;
+
         if (err) {
             err.code = INSTALL_ERR;
-            return callback(err);
         }
 
-        // npm installed dependencies from package.json in path successfully
-        return callback(null, result);
+        callback(err, result);
     }
 
     function loadCallback(err) {
@@ -101,6 +109,8 @@ var npmi = function (options, callback) {
         }
 
         // npm loaded successfully
+        savedPrefix = npm.prefix; // save current npm.prefix
+        npm.prefix = installPath; // change npm.prefix to given installPath
         if (!name) {
             // just want to do an "npm install" where a package.json is
             npm.commands.install(installPath, [], installCallback);
@@ -113,15 +123,20 @@ var npmi = function (options, callback) {
                 // check if there is already a local install of this module
                 fs.readFile(path.resolve(name, 'package.json'), 'utf8', function (err, sourcePkgData) {
                     if (err) {
+                        // reset npm.prefix to saved value
+                        npm.prefix = savedPrefix;
                         callback(err);
 
                     } else {
                         try {
                             var sourcePkg = JSON.parse(sourcePkgData)
                         } catch (err) {
+                            // reset npm.prefix to saved value
+                            npm.prefix = savedPrefix;
                             callback(err);
                             return;
                         }
+
                         var pkgName = sourcePkg.name || path.basename(name);
                         fs.readFile(path.resolve(installPath, 'node_modules', pkgName, 'package.json'), 'utf8', function (err, targetPkgData) {
                             if (err) {
@@ -133,6 +148,8 @@ var npmi = function (options, callback) {
                                 try {
                                     var targetPkg = JSON.parse(targetPkgData);
                                 } catch (err) {
+                                    // reset npm.prefix to saved value
+                                    npm.prefix = savedPrefix;
                                     callback(err);
                                     return;
                                 }
@@ -142,6 +159,8 @@ var npmi = function (options, callback) {
                                     // local install won't work with version specified
                                     npm.commands.install(installPath, [name], installCallback);
                                 } else {
+                                    // reset npm.prefix to saved value
+                                    npm.prefix = savedPrefix;
                                     callback();
                                 }
                             }

@@ -4,7 +4,7 @@
   "description": "Gives a simplier API to npm install (programatically installs stuffs)",
   "main": "npmi.js",
   "scripts": {
-    "test": "node test/test.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
