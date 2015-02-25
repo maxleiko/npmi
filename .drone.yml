@@ -1,4 +1,4 @@
-image: bradrydzewski/node:0.10
+image: maxleiko/node-tools:latest
 script:
   - npm i
   - npm test
