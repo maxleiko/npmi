@@ -2,7 +2,7 @@ var os = require('os');
 var npmi = require('../npmi');
 
 describe('npmi', function () {
-    this.timeout(10000);
+    this.timeout(30000); // increase timeout because drone container is a bit slow
     it('should install kevoree-node-javascript:latest', function (done) {
         npmi({
             name: 'kevoree-node-javascript',
