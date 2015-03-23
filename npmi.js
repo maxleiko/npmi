@@ -193,4 +193,6 @@ npmi.LOAD_ERR    = LOAD_ERR;
 npmi.INSTALL_ERR = INSTALL_ERR;
 npmi.VIEW_ERR    = VIEW_ERR;
 
+npmi.NPM_VERSION = npm.version;
+
 module.exports = npmi;

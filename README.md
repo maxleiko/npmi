@@ -58,6 +58,8 @@ It is processed by __npm__ like command-line arguments but within an Object map 
 var npmi = require('npmi');
 var path = require('path');
 
+console.log(npmi.NPM_VERSION); // prints the installed npm version used by npmi
+
 
 var options = {
 	name: 'your-module',	// your module name
