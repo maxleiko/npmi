@@ -1,4 +1,5 @@
 var os = require('os');
+var path = require('path');
 var npmi = require('../npmi');
 
 describe('npmi', function () {
@@ -22,6 +23,20 @@ describe('npmi', function () {
             name: 'kevoree-node-javascript',
             version: '0.6.0',
             path: os.tmpdir()
+        }, function (err) {
+            if (err) {
+                throw err;
+            } else {
+                done();
+            }
+        });
+    });
+
+    it('should install npmi in os.tmpdir()', function (done) {
+        npmi({
+            name: path.resolve(process.cwd()),
+            path: os.tmpdir(),
+            forceInstall: true
         }, function (err) {
             if (err) {
                 throw err;
