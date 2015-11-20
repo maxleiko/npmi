@@ -1,4 +1,4 @@
-npmi
+npmi [![Build Status](https://travis-ci.org/maxleiko/npmi.svg)](https://travis-ci.org/maxleiko/npmi)
 ====
 
 NodeJS package that gives a simplier API to npm install (programatically installs things)
