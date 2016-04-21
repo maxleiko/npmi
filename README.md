@@ -8,6 +8,10 @@ NodeJS package that gives a simplier API to npm install (programatically install
 npm install npmi --save
 ```
 
+### npmi versions scheme
+ - **^1**: uses `npm@^2`
+ - **^2**: uses `npm@^3`
+
 ### Options
 #### options.name
 __Type:__ `String`
