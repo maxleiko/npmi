@@ -1,12 +1,8 @@
 npmi [![Build Status](https://travis-ci.org/maxleiko/npmi.svg)](https://travis-ci.org/maxleiko/npmi)
 ====
-
 NodeJS package that gives a simplier API to npm install (programatically installs things)
 
-### Installation
-```sh
-npm install npmi --save
-```
+[![NPM](https://nodei.co/npm/npmi.png?downloads=true&downloadRank=true)](https://nodei.co/npm/npmi/)
 
 ### npmi versions scheme
  - **^1**: uses `npm@^2`
