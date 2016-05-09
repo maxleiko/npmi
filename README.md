@@ -81,3 +81,7 @@ npmi(options, function (err, result) {
 	console.log(options.name+'@'+options.version+' installed successfully in '+path.resolve(options.path));
 });
 ```
+
+### Acknowledgements
+This work has been done in the context of the [HEADS Project](http://heads-project.eu/)
+![HEADS LOGO](heads-logo.png)
