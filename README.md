@@ -9,6 +9,8 @@ NodeJS package that gives a simplier API to npm install (programatically install
  - **^2**: uses `npm@^3`
  - **^3**: uses `npm@^5`
 
+> :warning: Be advised that `npm` in its `v5+` will symlink local modules from the destination directory to the actual module directory instead of "installing" them old-school style (which is a breaking change regarding the previous npm versions)
+
 ### Options
 #### options.name
 __Type:__ `String`
