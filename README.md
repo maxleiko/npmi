@@ -88,3 +88,7 @@ npmi(options, function (err, result) {
 ### Acknowledgements
 This work has been done in the context of the [HEADS Project](http://heads-project.eu/)  
 ![HEADS LOGO](heads-logo.png)
+
+### Contributors
+ - [lukaskollmer](https://github.com/lukaskollmer)
+ 
