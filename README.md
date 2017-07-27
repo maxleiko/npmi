@@ -7,6 +7,7 @@ NodeJS package that gives a simplier API to npm install (programatically install
 ### npmi versions scheme
  - **^1**: uses `npm@^2`
  - **^2**: uses `npm@^3`
+ - **^3**: uses `npm@^5`
 
 ### Options
 #### options.name
