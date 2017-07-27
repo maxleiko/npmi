@@ -25,5 +25,8 @@
   "dependencies": {
     "npm": "^5",
     "semver": "^5.4.1"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2"
   }
 }
