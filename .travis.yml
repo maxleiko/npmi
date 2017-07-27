@@ -1,8 +1,9 @@
 sudo: false
 language: node_js
 node_js:
-  - "0.12.7"
-  - "4.2.2"
+  - "4"
+  - "6"
+  - "8"
 before_install: npm i -g mocha
 notifications:
   email:
