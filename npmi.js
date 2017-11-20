@@ -1,4 +1,4 @@
-var npm    = require('npm');
+var npm    = require('global-npm');
 var fs     = require('fs');
 var path   = require('path');
 var semver = require('semver');
